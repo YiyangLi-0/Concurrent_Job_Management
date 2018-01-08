@@ -1,0 +1,6 @@
+core_info    cluster_core_info
+arg_lo       190000
+arg_hi       190007
+endmarker    terminated
+run_delta    1.0    # second
+check_delta  10.0   # second
