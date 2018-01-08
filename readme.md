@@ -1,3 +1,7 @@
+# Warning
+
+To run this code, you need to modify the contents of cluster_core_info according to your own cluster. You should be able to passwordlessly SSH your remote nodes.
+
 # Objective
 
 Two functionalities are implemented in this demo project: 
@@ -68,3 +72,64 @@ modules/paramikoSshClient.py:
 Script running on master node. A class to handle SSH connection to remote cores.
 
 
+# Example output
+
+&nbsp;&nbsp;execnet source files are located at: <br />
+&nbsp;&nbsp;/usr/local/lib/python2.7/dist-packages/execnet/
+
+Gateways generated with user [mpiuser] on remote cores:
+
+Process 24748 running on master node, submitting 190000! to a remote core <br />
+Process 24749 running on master node, submitting 190001! to a remote core <br />
+Process 24750 running on master node, submitting 190002! to a remote core <br />
+Process 24751 running on master node, submitting 190003! to a remote core <br />
+Job:  190000!  submitted to gateway Slave1_1 <br />
+Job:  190001!  submitted to gateway Slave1_0 <br />
+Job:  190002!  submitted to gateway Slave2_0 <br />
+Job:  190003!  submitted to gateway Slave2_1 <br />
+!!! 190002! running on Slave2 will be killed <br />
+&nbsp;&nbsp;&nbsp;&nbsp;Process 9096 on node Slave2 killed, 190002! <br />
+&nbsp;&nbsp;&nbsp;&nbsp;Gateway closed: Slave2_0 <br />
+&nbsp;&nbsp;&nbsp;&nbsp;Process 24750 completed/killed on master node <br />
+&nbsp;&nbsp;&nbsp;&nbsp;Remote core Slave2-0 freed <br />
+Process 24764 running on master node, submitting 190004! to a remote core <br />
+Job:  190004!  submitted to gateway Slave2_0 <br />
+!!! 190004! running on Slave2 will be killed <br />
+&nbsp;&nbsp;&nbsp;&nbsp;Gateway closed: Slave2_0 <br />
+&nbsp;&nbsp;&nbsp;&nbsp;Process 9160 on node Slave2 killed, 190004! <br />
+&nbsp;&nbsp;&nbsp;&nbsp;Gateway Slave1_1 returned: <br />
+&nbsp;&nbsp;&nbsp;&nbsp;('190000 !', '-- remote PID: 2361', '-- Calculation: 20.4878 s, dumping: 0.0914 s') <br />
+Job:  190000!  submitted to gateway Slave1_1 <br />
+&nbsp;&nbsp;&nbsp;&nbsp;Gateway closed: Slave1_1 <br />
+&nbsp;&nbsp;&nbsp;&nbsp;Gateway Slave1_0 returned: <br />
+&nbsp;&nbsp;&nbsp;&nbsp;('190001 !', '-- remote PID: 2360', '-- Calculation: 20.4682 s, dumping: 0.1100 s') <br />
+Job:  190001!  submitted to gateway Slave1_0 <br />
+&nbsp;&nbsp;&nbsp;&nbsp;Gateway closed: Slave1_0 <br />
+&nbsp;&nbsp;&nbsp;&nbsp;Gateway Slave2_1 returned: <br />
+&nbsp;&nbsp;&nbsp;&nbsp;('190003 !', '-- remote PID: 9097', '-- Calculation: 20.6473 s, dumping: 0.0811 s') <br />
+Job:  190003!  submitted to gateway Slave2_1 <br />
+&nbsp;&nbsp;&nbsp;&nbsp;Gateway closed: Slave2_1 <br />
+&nbsp;&nbsp;&nbsp;&nbsp;Process 24764 completed/killed on master node <br />
+&nbsp;&nbsp;&nbsp;&nbsp;Remote core Slave2-0 freed <br />
+Process 24780 running on master node, submitting 190005! to a remote core <br />
+Job:  190005!  submitted to gateway Slave2_0 <br />
+&nbsp;&nbsp;&nbsp;&nbsp;Process 24748 completed/killed on master node <br />
+&nbsp;&nbsp;&nbsp;&nbsp;Remote core Slave1-1 freed <br />
+Process 24783 running on master node, submitting 190006! to a remote core <br />
+Job:  190006!  submitted to gateway Slave1_1 <br />
+&nbsp;&nbsp;&nbsp;&nbsp;Process 24749 completed/killed on master node <br />
+&nbsp;&nbsp;&nbsp;&nbsp;Remote core Slave1-0 freed <br />
+Process 24786 running on master node, submitting 190007! to a remote core <br />
+Job:  190007!  submitted to gateway Slave1_0 <br />
+!!! 190005! running on Slave2 will be killed <br />
+&nbsp;&nbsp;&nbsp;&nbsp;Gateway closed: Slave2_0 <br />
+&nbsp;&nbsp;&nbsp;&nbsp;Process 9224 on node Slave2 killed, 190005! <br />
+!!! 190006! running on Slave1 will be killed <br />
+&nbsp;&nbsp;&nbsp;&nbsp;Gateway closed: Slave1_1 <br />
+&nbsp;&nbsp;&nbsp;&nbsp;Process 2399 on node Slave1 killed, 190006! <br />
+&nbsp;&nbsp;&nbsp;&nbsp;Gateway Slave1_0 returned: <br />
+&nbsp;&nbsp;&nbsp;&nbsp;('190007 !', '-- remote PID: 2429', '-- Calculation: 20.5788 s, dumping: 0.1061 s') <br />
+Job:  190007!  submitted to gateway Slave1_0 <br />
+&nbsp;&nbsp;&nbsp;&nbsp;Gateway closed: Slave1_0
+
+All jobs done.
