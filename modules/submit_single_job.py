@@ -31,8 +31,8 @@ def submit_job(label, arg, inp):
 
         if item != "ready":
             # A job completed on a remote core.
-            print "    Gateway {} returned:\n    {}".format(
-                  channel.gateway.id, item)
+            print "Gateway {} returned:\n    {}".format(
+                   channel.gateway.id, item)
             mch.send_each(None)
             manage_dump_files(item, inp['output_dir'], wid)
         

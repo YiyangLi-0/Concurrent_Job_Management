@@ -10,7 +10,7 @@
      It is assumed that sudo passwords are the same on all worker nodes.
 """
 import os, sys
-import multiprocessing, execnet
+import multiprocessing
 import psutil, getpass
 import time
 # Custom modules
@@ -28,7 +28,6 @@ def main():
     check_output_dir(inp['output_dir'])
     clean_old_output(inp['output_dir'], inp['arg_lo'], inp['arg_hi'])
 
-    ecexnet_location()
     usr = user()
 
     cluster= get_cluster_info(inp['core_info'])
@@ -69,11 +68,6 @@ def clean_old_output(output_dir, lo, hi):
     old_file = output_dir + 'finished_jobs_{}_{}'.format(lo, hi)
     if os.path.exists(old_file):
         os.remove(old_file)
-
-def ecexnet_location():
-    print '  execnet source files are located at:\n  {}/\n'.format(
-          os.path.join(os.path.dirname(execnet.__file__))
-          )
 
 def user():
     usr = getpass.getuser()

@@ -1,12 +1,17 @@
-# Warning
+# Prerequisites
 
 To run this code, you need to modify the contents of cluster_core_info according to your own cluster. You should be able to passwordlessly SSH your remote nodes.
+
+Modules: <br />
+&nbsp;&nbsp;&nbsp;&nbsp;execnet <br />
+&nbsp;&nbsp;&nbsp;&nbsp;psutil <br />
+&nbsp;&nbsp;&nbsp;&nbsp;paramiko <br />
 
 # Objective
 
 Two functionalities are implemented in this demo project: 
-  * to set up and submit jobs on remote cores.
-  * to force termination of random remote jobs and submit new jobs to keep all remote cores busy.
+  * to automatically set up and submit jobs on remote cores.
+  * to automatically force termination of random remote jobs and submit new jobs to keep all remote cores busy.
 
 The scenario of related real-world problem is as follows. Suppose we can run parallel jobs on a cluster, where each job takes many CPU time to finish and dumps its result to a file on the Network File System (NFS). We can keep monitoring these result files to determine if some on-going jobs are not needed any more, such that keeping running them will be wasting resources. We thus need to terminate these jobs, free the related remote cores, and submit new jobs.
 
@@ -23,7 +28,7 @@ The multiprocessing module is used to run X processes simultaneously on master n
 
 A background process (using the threading module) is kept running on master node to periodically check the dumped files and pick out some random jobs to terminate. The selected remote job is terminated via bash command with the paramiko module. The termination of a remote job also closes the channel between master node and remote core. A new channel is then established to submit a new job, thus utilizing all available remote cores.
 
-The reason of the above design is that, execnet uses static gateway group to establish multiple channels and submit jobs to remote cores, where each channel keeps its unique PID on the remote node, no matter how many different jobs are submitted through this channel. This feature fits well if we do not need to terminate any on-going jobs. However, if a channel is closed by its PID, the connection to that remote core is lost, and no more job can be submitted to that remote core while the gateway group lives (so the remote core will remain idle). Thus, I specify that a gateway group contains only one channel. So, either the job successfully completes or gets terminated, its gateway is closed, and a new gateway and a new channel is created with a new PID, this enables both new job submission and job-termination.
+The reason of the above design is that, execnet uses static gateway group to establish multiple channels and submit jobs to remote cores, where each channel keeps its unique PID on the remote node, no matter how many different jobs are submitted through this channel. This feature fits well if we do not need to terminate any on-going jobs. However, if a channel is closed by its PID, the connection to that remote core is lost, and no more job can be submitted to that remote core while the gateway group lives (so the remote core will remain idle). Thus, I specify that a gateway group contains only one channel. So, either the job successfully completes or gets terminated, its gateway is closed, and a new gateway and a new channel is created with a new PID, this enables new job submission and job-termination.
 
 
 # Code structure
@@ -74,9 +79,6 @@ Script running on master node. A class to handle SSH connection to remote cores.
 
 # Example output
 
-&nbsp;&nbsp;execnet source files are located at: <br />
-&nbsp;&nbsp;/usr/local/lib/python2.7/dist-packages/execnet/
-
 Gateways generated with user [mpiuser] on remote cores:
 
 Process 24748 running on master node, submitting 190000! to a remote core <br />
@@ -97,15 +99,15 @@ Job:  190004!  submitted to gateway Slave2_0 <br />
 !!! 190004! running on Slave2 will be killed <br />
 &nbsp;&nbsp;&nbsp;&nbsp;Gateway closed: Slave2_0 <br />
 &nbsp;&nbsp;&nbsp;&nbsp;Process 9160 on node Slave2 killed, 190004! <br />
-&nbsp;&nbsp;&nbsp;&nbsp;Gateway Slave1_1 returned: <br />
+Gateway Slave1_1 returned: <br />
 &nbsp;&nbsp;&nbsp;&nbsp;('190000 !', '-- remote PID: 2361', '-- Calculation: 20.4878 s, dumping: 0.0914 s') <br />
 Job:  190000!  submitted to gateway Slave1_1 <br />
 &nbsp;&nbsp;&nbsp;&nbsp;Gateway closed: Slave1_1 <br />
-&nbsp;&nbsp;&nbsp;&nbsp;Gateway Slave1_0 returned: <br />
+Gateway Slave1_0 returned: <br />
 &nbsp;&nbsp;&nbsp;&nbsp;('190001 !', '-- remote PID: 2360', '-- Calculation: 20.4682 s, dumping: 0.1100 s') <br />
 Job:  190001!  submitted to gateway Slave1_0 <br />
 &nbsp;&nbsp;&nbsp;&nbsp;Gateway closed: Slave1_0 <br />
-&nbsp;&nbsp;&nbsp;&nbsp;Gateway Slave2_1 returned: <br />
+Gateway Slave2_1 returned: <br />
 &nbsp;&nbsp;&nbsp;&nbsp;('190003 !', '-- remote PID: 9097', '-- Calculation: 20.6473 s, dumping: 0.0811 s') <br />
 Job:  190003!  submitted to gateway Slave2_1 <br />
 &nbsp;&nbsp;&nbsp;&nbsp;Gateway closed: Slave2_1 <br />
@@ -127,7 +129,7 @@ Job:  190007!  submitted to gateway Slave1_0 <br />
 !!! 190006! running on Slave1 will be killed <br />
 &nbsp;&nbsp;&nbsp;&nbsp;Gateway closed: Slave1_1 <br />
 &nbsp;&nbsp;&nbsp;&nbsp;Process 2399 on node Slave1 killed, 190006! <br />
-&nbsp;&nbsp;&nbsp;&nbsp;Gateway Slave1_0 returned: <br />
+Gateway Slave1_0 returned: <br />
 &nbsp;&nbsp;&nbsp;&nbsp;('190007 !', '-- remote PID: 2429', '-- Calculation: 20.5788 s, dumping: 0.1061 s') <br />
 Job:  190007!  submitted to gateway Slave1_0 <br />
 &nbsp;&nbsp;&nbsp;&nbsp;Gateway closed: Slave1_0

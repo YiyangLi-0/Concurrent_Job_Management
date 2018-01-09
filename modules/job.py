@@ -22,7 +22,7 @@ def hostname():
     return socket.gethostname()
 
 def working_dir():
-	return os.getcwd()
+    return os.getcwd()
 
 def listdir(path):
     return os.listdir(path)
@@ -75,8 +75,7 @@ if __name__ == '__channelexec__':
                       job.pid(output_dir, arg, gateway_id),
                       job.dump(output_dir, arg)
                     ))
-                #channel.makefile('w', proxyclose=False)
             else:
                 print 'Firtst item sent should be an integer'
         else:
-            print 'Warnning! arg sent should be [integer, string] | None'
+            print 'Warnning! arg sent should be [str, int, str] or None'
