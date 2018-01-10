@@ -45,17 +45,13 @@ def main():
         uses execnet to send a job to run on a remote core. '''
     args = range(inp['arg_lo'], inp['arg_hi']+1)
 
-    for i, arg in enumerate(args):
-        if num_active_cores(cluster) < nrc:
-            ''' Submit a new process on master node. '''
-            run_process(arg, cluster, inp, submit_single_job)
-
-        else:
+    for arg in args:
+        if num_active_cores(cluster) == nrc:
             ''' Wait for a process to complete/terminate on master node. '''
             wait_process(num_active_cores, cluster, nrc, inp['run_delta'])
 
-            ''' Submit a new process on master node. '''
-            run_process(arg, cluster, inp, submit_single_job)
+        ''' Submit a new process on master node. '''
+        run_process(arg, cluster, inp, submit_single_job)
 
     final_output(terminate_job, inp['output_dir'], inp['run_delta'])
 
@@ -88,7 +84,7 @@ def get_cluster_info(file):
 
 def num_active_cores(cluster):
     ''' Return the number of occupied remote cores. '''
-    return sum([1 for _, val in cluster.items() if val['arg'] != None])
+    return sum([1 for v in cluster.values() if v['arg'] != None])
 
 def pick_free_core(cluster):
     ''' Return the dict-key of an unoccupied remote core. '''
@@ -122,21 +118,18 @@ def run_process(arg, cluster, inp, submit_single_job):
 def wait_process(num_active_cores, cluster, nrc, delta):
     ''' Wait for a process to complete/terminate on master node. '''
     while num_active_cores(cluster) == nrc:
-        # Loop over all active processes and check status.
+        # Loop over all active processes and check their status.
+        time.sleep(delta)
         for k, v in cluster.items():
-            time.sleep(delta)
-            if v['proc'].exitcode is None:
-                # Current process still running, check next one.
-                continue
-            else:
+            if v['proc'].exitcode != None:
                 print '    Process {} completed/killed on master node'.format(
                        v['proc'].pid)
-                v['proc'].join()  # Tidy up process.
-            print '    Remote core {} freed'.format(k)
-            sys.stdout.flush()
-            # Reset status of this remote core to available.
-            v['arg'], v['proc'] = None, None
-            break
+                v['proc'].join()  # Tidy up this process.
+                print '    Remote core {} freed'.format(k)
+                sys.stdout.flush()
+                # Reset status of this remote core to available.
+                v['arg'], v['proc'] = None, None
+                break
 
 def final_output(terminate_job, output_dir, delta):
     while True:
