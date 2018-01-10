@@ -79,6 +79,12 @@ Script running on master node. A class to handle SSH connection to remote cores.
 
 # Example output
 
+Usage:
+
+    python main.py <sudo-password>
+
+Output:
+
 Gateways generated with user [mpiuser] on remote cores:
 
 Process 24748 running on master node, submitting 190000! to a remote core <br />
