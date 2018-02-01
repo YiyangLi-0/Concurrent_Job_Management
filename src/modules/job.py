@@ -12,9 +12,10 @@ import psutil, socket
 import time, random
 import numpy as np
 # Custom modules
-# This script is executed on remote cores,
-# so we need to set system path on remote node.
-sys.path.insert(0, './modules')
+''' This script is executed on remote cores through NFS, the starting path is
+    where we call the main.py script. We need to set searching path for remote
+    cores. '''
+sys.path.insert(0, '../src/modules')
 import job
 
 

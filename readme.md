@@ -35,46 +35,48 @@ The reason of the above design is that, execnet uses static gateway group to est
 # Code structure
 
 . <br />
-├── input <br />
-├── cluster_core_info <br />
-├── main.py <br />
-└── modules/ <br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── __init__.py <br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── parser.py <br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── submit_single_job.py <br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── job.py <br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── terminate_job.py <br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── paramikoSshClient.py <br />
+├── run <br />
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── cluster_core_info <br />
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── input <br />
+└── src <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── main.py <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── modules <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── __init__.py <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── parser.py <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── submit_single_job.py <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── job.py <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── terminate_job.py <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── paramikoSshClient.py
 
-##### input:
-
-Input file containing required parameters.
-
-##### cluster_core_info:
+#### run/luster_core_info
 
 File containing the information of remote nodes, including host name and the number of physical cores on the node.
 
-##### main.py:
+#### run/input
+
+Input file containing required parameters.
+
+#### src/main.py
 
 Script running on master node. It initializes input parameters, sets up background-checking-process, and runs up to X processes simultaneously.
 
-##### modules/parser.py:
+#### src/modules/parser.py
 
 Script running on master node. It reads parameters from the input file.
 
-##### modules/submit_single_job.py:
+#### src/modules/submit_single_job.py
 
 Script running on master node. It defines one process, which establishes a channel connecting the master node and a remote core, then submits a job to the remote core.
 
-##### modules/job.py:
+#### src/modules/job.py
 
 Script running on remote cores. It defines the actual calculations and dump result file on NFS.
 
-##### modules/terminate_job.py:
+#### src/modules/terminate_job.py
 
 Script running on master node. It defines a background process to periodically check result files and terminate some on-going remote jobs.
 
-##### modules/paramikoSshClient.py:
+#### src/modules/paramikoSshClient.py
 
 Script running on master node. A class to handle SSH connection to remote cores.
 
@@ -82,9 +84,10 @@ Script running on master node. A class to handle SSH connection to remote cores.
 # Example output
 
 Usage:
-
-    python main.py <sudo-password>
-
+```
+cd run
+python ../src/main.py <sudo-password>
+```
 Screen output:
 
 > Gateways generated with user [mpiuser] on remote cores:
